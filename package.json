@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^0.0.32",
     "@ai-sdk/openai": "^0.0.40",
     "@tailwindcss/forms": "^0.5.7",
     "@types/lodash": "^4.17.7",
     "ai": "^3.3.0",
+    "antd-mobile": "^5.37.1",
+    "antd-mobile-icons": "^0.3.0",
     "axios": "^1.7.3",
     "lodash": "^4.17.21",
     "next": "14.2.3",

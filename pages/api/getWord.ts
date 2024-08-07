@@ -1,20 +1,46 @@
 import { generateObject, generateText } from "ai"
 import { openai } from "@ai-sdk/openai"
 import { z } from 'zod';
-import model from "@/server/llm"
+import model, { gemini } from "@/server/llm"
 import { NextRequest, NextResponse } from "next/server";
 import { NextApiResponse } from "next";
 import { NextApiRequest } from "next";
+import { size } from "lodash";
+
 
 export default async function getWord(req: NextApiRequest, res: NextApiResponse) {
-  const {targetLang,sourceLang,text} = req.body;
+  const { targetLang, sourceLang, text, fileList} = req.body;
+
+  let imageIncludeText = ''
+  if (size(fileList)) {
+    const {text} = await generateText({
+      model: gemini("models/gemini-1.5-flash-latest"),
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: `请提取所有图片中 **${targetLang}** 语言所有词或字，请直接输出[单词,单词...]，不要输出其他图中没有的文字内容` },
+            ...fileList.map((image:string) => {
+              return {
+              type: 'image',
+              image,
+              }
+            })
+          ],
+        },
+      ],
+    });
+    imageIncludeText = text
+  }
+
   const { object:{wordArray:wordArr} } = await generateObject({
     model: model,
     schema: z.object({
       wordArray:z.array(z.string())
     }),
     mode:"json",
-    prompt: `请在这个段文本中提取 **${targetLang}** 所有词或字:
+    prompt: `请在这个段文本中提取 **${targetLang}** 语言所有词或字，请不要输出**非${targetLang}** :
+    ${imageIncludeText}
     ${text}
     `
   })
