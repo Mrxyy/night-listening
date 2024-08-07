@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { langData } from "../data/lang";
 import axios from 'axios';
-import { map, max, merge, set, size, words } from 'lodash';
+import { get, map, max, merge, set, size, words } from 'lodash';
 import { CloseOutline, PlayOutline, ScanningOutline } from 'antd-mobile-icons';
 import { Button, ErrorBlock, ImageUploadItem, List, Popover } from 'antd-mobile';
 import ImagePicker from '@/components/ImagePicker';
@@ -35,11 +35,11 @@ const Home = () => {
   const handleTranslate = async () => {
     setStart(true)
     const res = { ...wordPairs }
-    if (textRef.current?.value || fileList.length) {
+    if (get(textRef.current,"value") || fileList.length) {
       const { data } = await axios.post("/api/getWord", {
         targetLang: selectedValue,
         sourceLang: selectedTargetValue,
-        text: textRef.current?.value,
+        text: get(textRef.current,"value",''),
         fileList: fileList.map(({ url }) => url)
       })
       merge(res, data)
@@ -185,12 +185,12 @@ const Home = () => {
           }}
         >
           <textarea
-            ref={textRef}
+            ref={textRef as any}
             className={`w-full resize-none border-none align-top focus:ring-0 sm:text-sm ${!size(wordPairs) ? "min-h-[30vh]" : ''}`}
             placeholder="Enter any additional order notes..."
           ></textarea>
           <div className="flex items-center justify-end gap-2 bg-white p-3">
-            <ManualOpenPhoto fileList={fileList} setFileList={setFileList} />
+            <ManualOpenPhoto fileList={fileList as any} setFileList={setFileList} />
           </div>
         </div>
       </div>

@@ -27,7 +27,7 @@ const ImagePicker = ({ handleFileChange }: {
   );
 };
 
-const ManualOpenPhoto: FC = ({fileList, setFileList}:any) => {
+const ManualOpenPhoto = ({fileList, setFileList}:any) => {
   const input = useRef<ImageUploaderRef>(null)
 
   return (
