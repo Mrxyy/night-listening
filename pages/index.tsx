@@ -31,15 +31,15 @@ const Home = () => {
   }>({});
   const textRef = useRef();
   const [fileList, setFileList] = useState<ImageUploadItem[]>([])
-  const [start,setStart] = useState(false)
+  const [start, setStart] = useState(false)
   const handleTranslate = async () => {
     setStart(true)
     const res = { ...wordPairs }
-    if (get(textRef.current,"value") || fileList.length) {
+    if (get(textRef.current, "value") || fileList.length) {
       const { data } = await axios.post("/api/getWord", {
         targetLang: selectedValue,
         sourceLang: selectedTargetValue,
-        text: get(textRef.current,"value",''),
+        text: get(textRef.current, "value", ''),
         fileList: fileList.map(({ url }) => url)
       })
       merge(res, data)
@@ -80,7 +80,6 @@ const Home = () => {
               text: word,
               lang: selectedValue
             })
-            audioEl.playbackRate = 1;
             url = map[word] = data.result_audio_url
           }
           setAudioUrl(url)
@@ -94,7 +93,6 @@ const Home = () => {
             })
             url = map[word] = data.result_audio_url
           }
-          audioEl.playbackRate = 1;
           setAudioUrl(url)
         }
         else if (round === 3) {
@@ -103,12 +101,11 @@ const Home = () => {
           let url = map[`${sWord}-${tWord}`];
           if (!url) {
             const { data } = await axios.post("/api/getWordSpeech", {
-              text: `${splitAndFormat(sWord)},${sWord},${tWord}`,
+              text: `${sWord},${splitAndFormat(sWord)},${tWord}`,
               lang: selectedTargetValue
             })
             url = map[`${sWord}-${tWord}`] = data.result_audio_url
           }
-          audioEl.playbackRate = 0.6;
           setAudioUrl(url)
         }
         setActiveWord(word);
@@ -261,7 +258,9 @@ const Home = () => {
       </div>
       <div className='flex justify-between fixed bottom-0 w-full left-0 px-4 py-4 bg-white'>
         <div className="relative">
-          <audio ref={audioElRef} src={AudioUrl} controls autoPlay />
+          <audio ref={audioElRef} src={AudioUrl} controls autoPlay onCanPlay={() => {
+            audioElRef.current.playbackRate = roundRef.current === 3 ? 0.7 : 1
+          }} />
           <div className="absolute inset-0" />
         </div>
         <Button
