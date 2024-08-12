@@ -36,21 +36,24 @@ const Home = () => {
     setStart(true)
     const res = { ...wordPairs }
     if (get(textRef.current, "value") || fileList.length) {
-    const res =  axios.post("/api/getWord", {
+      const res = axios.post("/api/getWord", {
         targetLang: selectedValue,
         sourceLang: selectedTargetValue,
         text: get(textRef.current, "value", ''),
         fileList: fileList.map(({ url }) => url)
       })
-      res.catch(()=>{
+      res.catch(() => {
         setStart(false)
       })
       const { data } = await res;
-      merge(res, data)
+      setWordPairs({
+        ...wordPairs, 
+        ...data
+      });
     }
     setIndex(0);
     roundRef.current = 1
-    setWordPairs(res);
+    debugger
     setStart(false)
   };
 
