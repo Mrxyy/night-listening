@@ -36,12 +36,16 @@ const Home = () => {
     setStart(true)
     const res = { ...wordPairs }
     if (get(textRef.current, "value") || fileList.length) {
-      const { data } = await axios.post("/api/getWord", {
+    const res =  axios.post("/api/getWord", {
         targetLang: selectedValue,
         sourceLang: selectedTargetValue,
         text: get(textRef.current, "value", ''),
         fileList: fileList.map(({ url }) => url)
       })
+      res.catch(()=>{
+        setStart(false)
+      })
+      const { data } = await res;
       merge(res, data)
     }
     setIndex(0);
@@ -185,6 +189,12 @@ const Home = () => {
             ref={textRef as any}
             className={`w-full resize-none border-none align-top focus:ring-0 sm:text-sm ${!size(wordPairs) ? "min-h-[30vh]" : ''}`}
             placeholder="Enter any additional order notes..."
+            onBlurCapture={(e) => {
+              e.preventDefault()
+              e.target.scrollIntoView()
+              window.scrollTo(0, -20);
+              return false;
+            }}
           ></textarea>
           <div className="flex items-center justify-end gap-2 bg-white p-3">
             <ManualOpenPhoto fileList={fileList as any} setFileList={setFileList} />

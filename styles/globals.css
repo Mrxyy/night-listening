@@ -16,10 +16,13 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
+body{
   height: 100vh;
   overflow: hidden;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
       transparent,

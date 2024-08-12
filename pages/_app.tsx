@@ -4,8 +4,8 @@ import Head from 'next/head';
 
 
 type MyAppProps = {
-    Component: React.FunctionComponent;
-    pageProps: Record<string, any>;
+  Component: React.FunctionComponent;
+  pageProps: Record<string, any>;
 };
 
 export default function App({ Component, pageProps }: MyAppProps) {
