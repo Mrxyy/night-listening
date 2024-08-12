@@ -1,20 +1,21 @@
 import { generateObject, generateText } from "ai"
 import { openai } from "@ai-sdk/openai"
 import { z } from 'zod';
-import model, { gemini } from "@/server/llm"
+import { gemini } from "@/server/llm"
 import { NextRequest, NextResponse } from "next/server";
 import { NextApiResponse } from "next";
 import { NextApiRequest } from "next";
 import { size } from "lodash";
 
 
+const model = gemini("models/gemini-1.5-flash-latest");
 export default async function getWord(req: NextApiRequest, res: NextApiResponse) {
   const { targetLang, sourceLang, text, fileList} = req.body;
 
   let imageIncludeText = ''
   if (size(fileList)) {
     const {text} = await generateText({
-      model: gemini("models/gemini-1.5-flash-latest"),
+      model: model,
       messages: [
         {
           role: 'user',

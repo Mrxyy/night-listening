@@ -53,7 +53,6 @@ const Home = () => {
     }
     setIndex(0);
     roundRef.current = 1
-    debugger
     setStart(false)
   };
 
